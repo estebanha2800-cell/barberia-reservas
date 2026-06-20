@@ -118,20 +118,21 @@ export default function Reservas() {
   return (
     <div className="min-h-screen flex flex-col" style={{background:'#0a0a0a', color:'#f0f0f0'}}>
 
-      {/* Imagen de marca */}
-      <div className="flex justify-center" style={{background:'#0a0a0a', paddingTop:'24px'}}>
-        <img
-          src="/opera-brand.jpg.jpeg"
-          alt="Opera Barbería"
-          style={{
-            width:'100%',
-            maxWidth:'320px',
-            borderRadius:'12px',
-            opacity:0.95,
-            display:'block',
-          }}
-        />
-      </div>
+      {/* Hero header */}
+      <header className="relative text-center px-5 pt-12 pb-8 border-b" style={{borderColor:'#1e1e1e'}}>
+        <h1
+          className="text-6xl font-bold tracking-wider text-white leading-none"
+          style={{fontFamily:"'Playfair Display', Georgia, serif", letterSpacing:'0.12em'}}
+        >
+          Opera
+        </h1>
+        <p
+          className="text-xs tracking-widest uppercase mt-3"
+          style={{color:'#c41230', letterSpacing:'0.25em'}}
+        >
+          Un concierto para tu cabello
+        </p>
+      </header>
 
       {/* Barra de progreso */}
       {paso !== 'confirmacion' && !cargandoInit && !errorInit && (

@@ -6,8 +6,7 @@ const MESES = [
 ]
 
 export default function Confirmacion({ cita, onNueva }) {
-  const { id, cliente_nombre, servicio, fecha, slot } = cita
-  const codigo = id.replace(/-/g, '').substring(0, 8).toUpperCase()
+  const { cliente_nombre, servicio, fecha, slot } = cita
   const fechaTexto = `${fecha.getDate()} de ${MESES[fecha.getMonth()]} de ${fecha.getFullYear()}`
   const primerNombre = cliente_nombre.split(' ')[0]
 
@@ -31,25 +30,6 @@ export default function Confirmacion({ cita, onNueva }) {
       <p className="mb-8" style={{color:'#666'}}>
         Listo, {primerNombre}. Te esperamos.
       </p>
-
-      {/* Código */}
-      <div
-        className="rounded-2xl p-5 mb-6"
-        style={{background:'#151515', border:'1px solid #252525'}}
-      >
-        <p className="text-xs uppercase tracking-widest mb-2" style={{color:'#555', letterSpacing:'0.2em'}}>
-          Código de cita
-        </p>
-        <p
-          className="font-mono font-bold tracking-widest text-white"
-          style={{fontSize:'28px', letterSpacing:'0.3em'}}
-        >
-          {codigo}
-        </p>
-        <p className="text-xs mt-2" style={{color:'#555'}}>
-          Guárdalo para cancelar si necesitas
-        </p>
-      </div>
 
       {/* Detalle */}
       <div
@@ -95,17 +75,6 @@ export default function Confirmacion({ cita, onNueva }) {
       >
         Agendar otra cita
       </button>
-
-      {/* Link a cancelar */}
-      <a
-        href="/cancelar"
-        className="block text-xs uppercase tracking-widest py-2 transition-all"
-        style={{color:'#444', letterSpacing:'0.15em', textDecoration:'none'}}
-        onMouseEnter={e => (e.currentTarget.style.color='#888')}
-        onMouseLeave={e => (e.currentTarget.style.color='#444')}
-      >
-        ¿Necesitas cancelar? Usa tu código aquí
-      </a>
 
     </div>
   )
