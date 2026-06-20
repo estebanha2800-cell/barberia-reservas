@@ -134,6 +134,23 @@ export default function Reservas() {
         </p>
       </header>
 
+      {/* Imagen de marca */}
+      <div className="flex justify-center" style={{background:'#0a0a0a', paddingTop:'16px'}}>
+        <img
+          src="/opera-brand.jpg.jpeg"
+          alt="Opera Barbería"
+          style={{
+            width:'100%',
+            maxWidth:'340px',
+            height:'180px',
+            objectFit:'cover',
+            objectPosition:'top',
+            borderRadius:'12px',
+            opacity:0.92,
+          }}
+        />
+      </div>
+
       {/* Barra de progreso */}
       {paso !== 'confirmacion' && !cargandoInit && !errorInit && (
         <div className="flex gap-1 px-5 pt-5">
