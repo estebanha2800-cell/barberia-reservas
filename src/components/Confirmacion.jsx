@@ -46,7 +46,9 @@ export default function Confirmacion({ cita, onNueva }) {
         >
           {codigo}
         </p>
-        <p className="text-xs mt-2" style={{color:'#555'}}>Guárdalo por si necesitas cancelar</p>
+        <p className="text-xs mt-2" style={{color:'#555'}}>
+          Guárdalo para cancelar si necesitas
+        </p>
       </div>
 
       {/* Detalle */}
@@ -74,7 +76,7 @@ export default function Confirmacion({ cita, onNueva }) {
 
       <button
         onClick={onNueva}
-        className="w-full font-bold py-4 rounded-2xl transition-all active:scale-95"
+        className="w-full font-bold py-4 rounded-2xl transition-all active:scale-95 mb-3"
         style={{
           background:'transparent',
           border:'1px solid #c41230',
@@ -93,6 +95,18 @@ export default function Confirmacion({ cita, onNueva }) {
       >
         Agendar otra cita
       </button>
+
+      {/* Link a cancelar */}
+      <a
+        href="/cancelar"
+        className="block text-xs uppercase tracking-widest py-2 transition-all"
+        style={{color:'#444', letterSpacing:'0.15em', textDecoration:'none'}}
+        onMouseEnter={e => (e.currentTarget.style.color='#888')}
+        onMouseLeave={e => (e.currentTarget.style.color='#444')}
+      >
+        ¿Necesitas cancelar? Usa tu código aquí
+      </a>
+
     </div>
   )
 }
