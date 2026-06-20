@@ -141,12 +141,10 @@ export default function Reservas() {
           alt="Opera Barbería"
           style={{
             width:'100%',
-            maxWidth:'340px',
-            height:'180px',
-            objectFit:'cover',
-            objectPosition:'top',
+            maxWidth:'320px',
             borderRadius:'12px',
-            opacity:0.92,
+            opacity:0.95,
+            display:'block',
           }}
         />
       </div>
