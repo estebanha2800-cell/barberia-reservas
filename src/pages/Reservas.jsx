@@ -223,9 +223,10 @@ export default function Reservas() {
       >
         <a
           href="/cancelar"
-          style={{color:'#555', fontSize:'12px', textDecoration:'none', letterSpacing:'0.1em', textTransform:'uppercase'}}
-          onMouseEnter={e => (e.currentTarget.style.color='#c41230')}
-          onMouseLeave={e => (e.currentTarget.style.color='#555')}
+          className="font-semibold"
+          style={{color:'#c41230', fontSize:'12px', textDecoration:'none', letterSpacing:'0.1em', textTransform:'uppercase'}}
+          onMouseEnter={e => (e.currentTarget.style.opacity='0.7')}
+          onMouseLeave={e => (e.currentTarget.style.opacity='1')}
         >
           Cancelar cita
         </a>
@@ -235,7 +236,7 @@ export default function Reservas() {
           onMouseEnter={e => (e.currentTarget.style.color='#888')}
           onMouseLeave={e => (e.currentTarget.style.color='#333')}
         >
-          Acceso barbero
+          Admin
         </a>
       </footer>
 
