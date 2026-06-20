@@ -215,6 +215,30 @@ export default function Reservas() {
         )}
 
       </main>
+
+      {/* Footer con accesos rápidos */}
+      <footer
+        className="flex justify-between items-center px-6 py-5"
+        style={{borderTop:'1px solid #1a1a1a'}}
+      >
+        <a
+          href="/cancelar"
+          style={{color:'#555', fontSize:'12px', textDecoration:'none', letterSpacing:'0.1em', textTransform:'uppercase'}}
+          onMouseEnter={e => (e.currentTarget.style.color='#c41230')}
+          onMouseLeave={e => (e.currentTarget.style.color='#555')}
+        >
+          Cancelar cita
+        </a>
+        <a
+          href="/admin"
+          style={{color:'#333', fontSize:'12px', textDecoration:'none', letterSpacing:'0.1em', textTransform:'uppercase'}}
+          onMouseEnter={e => (e.currentTarget.style.color='#888')}
+          onMouseLeave={e => (e.currentTarget.style.color='#333')}
+        >
+          Acceso barbero
+        </a>
+      </footer>
+
     </div>
   )
 }
