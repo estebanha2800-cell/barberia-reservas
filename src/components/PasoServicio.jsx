@@ -1,6 +1,5 @@
 // PasoServicio.jsx — Paso 1: el cliente elige el servicio
 
-// Formatea un precio en pesos colombianos: 25000 → "$25.000"
 function formatPrecio(valor) {
   return '$' + valor.toLocaleString('es-CO')
 }
@@ -8,24 +7,34 @@ function formatPrecio(valor) {
 export default function PasoServicio({ servicios, onSeleccionar }) {
   return (
     <div>
-      <h2 className="text-xl font-bold text-gray-800 mb-1">¿Qué servicio necesitas?</h2>
-      <p className="text-gray-500 text-sm mb-6">Elige uno para ver la disponibilidad.</p>
+      <h2
+        className="text-2xl font-bold text-white mb-1"
+        style={{fontFamily:"'Playfair Display', Georgia, serif"}}
+      >
+        ¿Qué servicio?
+      </h2>
+      <p className="text-sm mb-6" style={{color:'#666'}}>Elige uno para ver disponibilidad.</p>
 
       <div className="flex flex-col gap-3">
         {servicios.map((s) => (
           <button
             key={s.id}
             onClick={() => onSeleccionar(s)}
-            className="w-full flex justify-between items-center px-5 py-4
-                       bg-white border border-gray-200 rounded-2xl shadow-sm
-                       hover:border-gray-800 hover:shadow-md
-                       active:scale-95 transition-all text-left"
+            className="w-full flex justify-between items-center px-5 py-4 text-left
+                       transition-all active:scale-95"
+            style={{
+              background:'#151515',
+              border:'1px solid #252525',
+              borderRadius:'16px',
+            }}
+            onMouseEnter={e => e.currentTarget.style.borderColor='#c41230'}
+            onMouseLeave={e => e.currentTarget.style.borderColor='#252525'}
           >
             <div>
-              <p className="font-semibold text-gray-800">{s.nombre}</p>
-              <p className="text-sm text-gray-400 mt-0.5">{s.duracion_min} min</p>
+              <p className="font-semibold text-white">{s.nombre}</p>
+              <p className="text-xs mt-0.5" style={{color:'#666'}}>{s.duracion_min} min</p>
             </div>
-            <span className="font-bold text-gray-700 text-lg">{formatPrecio(s.precio)}</span>
+            <span className="font-bold text-lg" style={{color:'#c41230'}}>{formatPrecio(s.precio)}</span>
           </button>
         ))}
       </div>

@@ -116,22 +116,32 @@ export default function Reservas() {
 
   // ── Renderizado ──────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{background:'#0a0a0a', color:'#f0f0f0'}}>
 
-      {/* Encabezado */}
-      <header className="bg-gray-900 text-white px-5 py-5">
-        <h1 className="text-lg font-bold tracking-wide">✂️ Barbería</h1>
-        <p className="text-xs text-gray-400 mt-0.5">Agenda tu cita en segundos</p>
+      {/* Hero header */}
+      <header className="relative text-center px-5 pt-12 pb-8 border-b" style={{borderColor:'#1e1e1e'}}>
+        <h1
+          className="text-6xl font-bold tracking-wider text-white leading-none"
+          style={{fontFamily:"'Playfair Display', Georgia, serif", letterSpacing:'0.12em'}}
+        >
+          Opera
+        </h1>
+        <p
+          className="text-xs tracking-widest uppercase mt-3"
+          style={{color:'#c41230', letterSpacing:'0.25em'}}
+        >
+          Un concierto para tu cabello
+        </p>
       </header>
 
-      {/* Barra de progreso (solo en los 4 pasos de reserva) */}
+      {/* Barra de progreso */}
       {paso !== 'confirmacion' && !cargandoInit && !errorInit && (
-        <div className="flex gap-1 px-5 pt-4">
+        <div className="flex gap-1 px-5 pt-5">
           {['servicio','fecha','horario','datos'].map((p, i) => (
             <div
               key={p}
-              className={`h-1.5 flex-1 rounded-full transition-all duration-300
-                ${i <= indicePaso ? 'bg-gray-900' : 'bg-gray-200'}`}
+              className="h-0.5 flex-1 transition-all duration-300"
+              style={{background: i <= indicePaso ? '#c41230' : '#2a2a2a'}}
             />
           ))}
         </div>
@@ -140,14 +150,12 @@ export default function Reservas() {
       {/* Contenido principal */}
       <main className="flex-1 px-5 py-6 max-w-md mx-auto w-full">
 
-        {/* Cargando datos iniciales */}
         {cargandoInit && <Cargando texto="Cargando servicios…" />}
 
-        {/* Error inicial */}
         {errorInit && (
-          <div className="bg-red-50 text-red-600 rounded-2xl p-5 text-center">
-            <p className="font-semibold mb-1">Algo salió mal</p>
-            <p className="text-sm">{errorInit}</p>
+          <div className="rounded-2xl p-5 text-center" style={{background:'#1a1a1a', border:'1px solid #c41230'}}>
+            <p className="font-semibold mb-1" style={{color:'#c41230'}}>Algo salió mal</p>
+            <p className="text-sm" style={{color:'#888'}}>{errorInit}</p>
           </div>
         )}
 

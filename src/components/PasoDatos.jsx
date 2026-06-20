@@ -2,27 +2,25 @@
 
 import { useState } from 'react'
 
-// Valida un número de celular colombiano: 10 dígitos que empiezan por 3
 function validarTelefono(tel) {
   return /^3\d{9}$/.test(tel.replace(/\s|-/g, ''))
 }
 
-// Nombres de los meses
 const MESES = [
   'enero','febrero','marzo','abril','mayo','junio',
   'julio','agosto','septiembre','octubre','noviembre','diciembre',
 ]
 
 export default function PasoDatos({ servicio, fecha, slot, onConfirmar, onVolver, guardando }) {
-  const [nombre,    setNombre]    = useState('')
-  const [telefono,  setTelefono]  = useState('')
-  const [errores,   setErrores]   = useState({})
+  const [nombre,   setNombre]   = useState('')
+  const [telefono, setTelefono] = useState('')
+  const [errores,  setErrores]  = useState({})
 
   function validar() {
     const errs = {}
     if (!nombre.trim()) errs.nombre = 'Escribe tu nombre completo.'
     if (!validarTelefono(telefono))
-      errs.telefono = 'Ingresa un celular colombiano válido (10 dígitos, empieza por 3).'
+      errs.telefono = 'Celular colombiano válido (10 dígitos, empieza por 3).'
     setErrores(errs)
     return Object.keys(errs).length === 0
   }
@@ -36,78 +34,102 @@ export default function PasoDatos({ servicio, fecha, slot, onConfirmar, onVolver
 
   const fechaTexto = `${fecha.getDate()} de ${MESES[fecha.getMonth()]} · ${slot.etiqueta}`
 
+  const inputStyle = {
+    background:'#151515',
+    border:'1px solid #2a2a2a',
+    borderRadius:'12px',
+    padding:'12px 16px',
+    color:'#f0f0f0',
+    fontSize:'14px',
+    width:'100%',
+    outline:'none',
+  }
+
   return (
     <div>
-      <h2 className="text-xl font-bold text-gray-800 mb-1">Tus datos</h2>
-      <p className="text-gray-500 text-sm mb-6">
-        Casi listo — solo necesitamos tu nombre y celular.
-      </p>
+      <h2
+        className="text-2xl font-bold text-white mb-1"
+        style={{fontFamily:"'Playfair Display', Georgia, serif"}}
+      >
+        Tus datos
+      </h2>
+      <p className="text-sm mb-6" style={{color:'#666'}}>Solo necesitamos tu nombre y celular.</p>
 
-      {/* Resumen de la cita */}
-      <div className="bg-gray-50 rounded-2xl p-4 mb-6 text-sm text-gray-600 space-y-1">
+      {/* Resumen */}
+      <div className="rounded-2xl p-4 mb-6 text-sm space-y-2" style={{background:'#151515', border:'1px solid #252525'}}>
         <div className="flex justify-between">
-          <span>Servicio</span>
-          <strong className="text-gray-800">{servicio.nombre}</strong>
+          <span style={{color:'#666'}}>Servicio</span>
+          <strong className="text-white">{servicio.nombre}</strong>
         </div>
         <div className="flex justify-between">
-          <span>Fecha y hora</span>
-          <strong className="text-gray-800">{fechaTexto}</strong>
+          <span style={{color:'#666'}}>Fecha y hora</span>
+          <strong className="text-white">{fechaTexto}</strong>
         </div>
         <div className="flex justify-between">
-          <span>Duración</span>
-          <strong className="text-gray-800">{servicio.duracion_min} min</strong>
+          <span style={{color:'#666'}}>Duración</span>
+          <strong className="text-white">{servicio.duracion_min} min</strong>
+        </div>
+        <div className="flex justify-between">
+          <span style={{color:'#666'}}>Precio</span>
+          <strong style={{color:'#c41230'}}>${servicio.precio?.toLocaleString('es-CO')}</strong>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-        {/* Nombre */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="nombre">
+          <label className="block text-xs uppercase tracking-widest mb-1.5" style={{color:'#666', letterSpacing:'0.15em'}}>
             Nombre completo
           </label>
           <input
-            id="nombre"
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             placeholder="Ej: Juan Pérez"
-            className={`w-full border rounded-xl px-4 py-3 text-gray-800 text-sm
-                        focus:outline-none focus:ring-2 focus:ring-gray-800
-                        ${errores.nombre ? 'border-red-400' : 'border-gray-300'}`}
+            style={{
+              ...inputStyle,
+              borderColor: errores.nombre ? '#c41230' : '#2a2a2a',
+            }}
+            onFocus={e => (e.currentTarget.style.borderColor='#888')}
+            onBlur={e => (e.currentTarget.style.borderColor=errores.nombre?'#c41230':'#2a2a2a')}
           />
           {errores.nombre && (
-            <p className="text-red-500 text-xs mt-1">{errores.nombre}</p>
+            <p className="text-xs mt-1" style={{color:'#c41230'}}>{errores.nombre}</p>
           )}
         </div>
 
-        {/* Teléfono */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="telefono">
+          <label className="block text-xs uppercase tracking-widest mb-1.5" style={{color:'#666', letterSpacing:'0.15em'}}>
             Número de celular
           </label>
           <input
-            id="telefono"
             type="tel"
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
             placeholder="Ej: 3001234567"
             inputMode="numeric"
-            className={`w-full border rounded-xl px-4 py-3 text-gray-800 text-sm
-                        focus:outline-none focus:ring-2 focus:ring-gray-800
-                        ${errores.telefono ? 'border-red-400' : 'border-gray-300'}`}
+            style={{
+              ...inputStyle,
+              borderColor: errores.telefono ? '#c41230' : '#2a2a2a',
+            }}
+            onFocus={e => (e.currentTarget.style.borderColor='#888')}
+            onBlur={e => (e.currentTarget.style.borderColor=errores.telefono?'#c41230':'#2a2a2a')}
           />
           {errores.telefono && (
-            <p className="text-red-500 text-xs mt-1">{errores.telefono}</p>
+            <p className="text-xs mt-1" style={{color:'#c41230'}}>{errores.telefono}</p>
           )}
         </div>
 
-        {/* Botón */}
         <button
           type="submit"
           disabled={guardando}
-          className="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl
-                     hover:bg-gray-700 active:scale-95 transition-all
-                     disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+          className="w-full font-bold py-4 rounded-2xl transition-all active:scale-95 mt-2"
+          style={{
+            background: guardando ? '#1a1a1a' : '#c41230',
+            color: guardando ? '#555' : '#fff',
+            opacity: guardando ? 0.7 : 1,
+            fontSize:'15px',
+            letterSpacing:'0.05em',
+          }}
         >
           {guardando ? 'Agendando…' : 'Confirmar cita'}
         </button>
@@ -115,7 +137,10 @@ export default function PasoDatos({ servicio, fecha, slot, onConfirmar, onVolver
 
       <button
         onClick={onVolver}
-        className="mt-4 w-full text-sm text-gray-400 underline hover:text-gray-700"
+        className="mt-4 w-full text-xs uppercase tracking-widest transition-all py-2"
+        style={{color:'#555', letterSpacing:'0.15em'}}
+        onMouseEnter={e => (e.currentTarget.style.color='#c41230')}
+        onMouseLeave={e => (e.currentTarget.style.color='#555')}
       >
         ← Cambiar hora
       </button>

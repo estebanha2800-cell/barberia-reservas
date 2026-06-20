@@ -3,6 +3,17 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase.js'
 
+const inputStyle = {
+  background:'#151515',
+  border:'1px solid #2a2a2a',
+  borderRadius:'12px',
+  padding:'12px 16px',
+  color:'#f0f0f0',
+  fontSize:'14px',
+  width:'100%',
+  outline:'none',
+}
+
 export default function Login({ onLogin }) {
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
@@ -13,35 +24,39 @@ export default function Login({ onLogin }) {
     e.preventDefault()
     setCargando(true)
     setError(null)
-
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
-
     if (authError) {
       setError('Email o contraseña incorrectos.')
       setCargando(false)
       return
     }
-
     onLogin()
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-5">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-5"
+      style={{background:'#0a0a0a'}}
+    >
       <div className="w-full max-w-sm">
 
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">✂️</span>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Panel del Barbero</h1>
-          <p className="text-sm text-gray-500 mt-1">Acceso privado</p>
+        <div className="text-center mb-10">
+          <h1
+            className="text-5xl font-bold text-white"
+            style={{fontFamily:"'Playfair Display', Georgia, serif", letterSpacing:'0.1em'}}
+          >
+            Opera
+          </h1>
+          <p className="text-xs mt-2 uppercase" style={{color:'#c41230', letterSpacing:'0.25em'}}>
+            Panel del barbero
+          </p>
         </div>
 
-        {/* Formulario */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-xs text-gray-500 uppercase tracking-widest">Email</label>
+            <label className="block text-xs uppercase mb-1.5" style={{color:'#555', letterSpacing:'0.15em'}}>
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -49,13 +64,16 @@ export default function Login({ onLogin }) {
               placeholder="tu@email.com"
               required
               autoComplete="email"
-              className="mt-1 w-full border border-gray-200 rounded-xl px-4 py-3 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white"
+              style={inputStyle}
+              onFocus={e => (e.currentTarget.style.borderColor='#888')}
+              onBlur={e => (e.currentTarget.style.borderColor='#2a2a2a')}
             />
           </div>
 
           <div>
-            <label className="text-xs text-gray-500 uppercase tracking-widest">Contraseña</label>
+            <label className="block text-xs uppercase mb-1.5" style={{color:'#555', letterSpacing:'0.15em'}}>
+              Contraseña
+            </label>
             <input
               type="password"
               value={password}
@@ -63,20 +81,25 @@ export default function Login({ onLogin }) {
               placeholder="••••••••"
               required
               autoComplete="current-password"
-              className="mt-1 w-full border border-gray-200 rounded-xl px-4 py-3 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white"
+              style={inputStyle}
+              onFocus={e => (e.currentTarget.style.borderColor='#888')}
+              onBlur={e => (e.currentTarget.style.borderColor='#2a2a2a')}
             />
           </div>
 
           {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
+            <p className="text-sm text-center" style={{color:'#c41230'}}>{error}</p>
           )}
 
           <button
             type="submit"
             disabled={cargando}
-            className="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl
-                       hover:bg-gray-800 active:scale-95 transition-all disabled:opacity-50 mt-2"
+            className="w-full font-bold py-4 rounded-2xl transition-all active:scale-95 mt-2"
+            style={{
+              background: cargando ? '#1a1a1a' : '#c41230',
+              color: cargando ? '#555' : '#fff',
+              fontSize:'15px',
+            }}
           >
             {cargando ? 'Entrando…' : 'Entrar'}
           </button>

@@ -36,10 +36,10 @@ function sumarDias(fechaStr, n) {
 // ── Config de estados ─────────────────────────────────────────────
 
 const ESTADOS = {
-  confirmada:     { label: 'Confirmada',     color: 'bg-blue-100 text-blue-700' },
-  completada:     { label: 'Completada',     color: 'bg-green-100 text-green-700' },
-  cancelada:      { label: 'Cancelada',      color: 'bg-red-100 text-red-700' },
-  no_se_presento: { label: 'No se presentó', color: 'bg-amber-100 text-amber-700' },
+  confirmada:     { label: 'Confirmada',     style: {background:'#1a2a3a', color:'#60a5fa'} },
+  completada:     { label: 'Completada',     style: {background:'#0f2a1a', color:'#4ade80'} },
+  cancelada:      { label: 'Cancelada',      style: {background:'#2a0f0f', color:'#f87171'} },
+  no_se_presento: { label: 'No se presentó', style: {background:'#2a1f0a', color:'#fbbf24'} },
 }
 
 // ── Componente tarjeta de cita ────────────────────────────────────
@@ -55,54 +55,56 @@ function CitaCard({ cita, mostrarFecha, onCambiarEstado }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm mb-3 border border-gray-100">
-      {/* Cabecera */}
+    <div
+      className="rounded-2xl p-4 mb-3"
+      style={{background:'#151515', border:'1px solid #252525'}}
+    >
       <div className="flex items-start justify-between gap-2 mb-1">
         <div className="min-w-0">
           {mostrarFecha && (
-            <p className="text-xs text-gray-400 mb-0.5 capitalize">{isoAFechaCorta(cita.inicio)}</p>
+            <p className="text-xs mb-0.5 capitalize" style={{color:'#555'}}>{isoAFechaCorta(cita.inicio)}</p>
           )}
-          <p className="font-bold text-gray-900">
+          <p className="font-bold text-white">
             {isoAHoraCol(cita.inicio)} · {cita.servicios?.nombre}
           </p>
-          <p className="text-sm text-gray-700 font-medium truncate">{cita.cliente_nombre}</p>
-          <p className="text-xs text-gray-400">{cita.cliente_telefono}</p>
+          <p className="text-sm font-medium truncate" style={{color:'#f0f0f0'}}>{cita.cliente_nombre}</p>
+          <p className="text-xs" style={{color:'#555'}}>{cita.cliente_telefono}</p>
         </div>
-        <span className={`text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap ${est.color}`}>
+        <span
+          className="text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap"
+          style={est.style}
+        >
           {est.label}
         </span>
       </div>
 
-      {/* Info servicio */}
-      <p className="text-xs text-gray-400 mt-1">
-        {cita.servicios?.duracion_min} min ·{' '}
-        ${cita.servicios?.precio?.toLocaleString('es-CO')}
+      <p className="text-xs mt-1" style={{color:'#555'}}>
+        {cita.servicios?.duracion_min} min · ${cita.servicios?.precio?.toLocaleString('es-CO')}
       </p>
 
-      {/* Acciones (solo si está confirmada) */}
       {cita.estado === 'confirmada' && (
         <div className="flex gap-2 mt-3 flex-wrap">
           <button
             onClick={() => cambiar('completada')}
             disabled={guardando}
-            className="flex-1 text-xs bg-green-600 text-white py-2 rounded-xl font-semibold
-                       hover:bg-green-700 active:scale-95 transition-all disabled:opacity-40"
+            className="flex-1 text-xs py-2 rounded-xl font-semibold active:scale-95 transition-all disabled:opacity-40"
+            style={{background:'#0f2a1a', color:'#4ade80', border:'1px solid #1a3a2a'}}
           >
             ✓ Completada
           </button>
           <button
             onClick={() => cambiar('no_se_presento')}
             disabled={guardando}
-            className="flex-1 text-xs bg-amber-500 text-white py-2 rounded-xl font-semibold
-                       hover:bg-amber-600 active:scale-95 transition-all disabled:opacity-40"
+            className="flex-1 text-xs py-2 rounded-xl font-semibold active:scale-95 transition-all disabled:opacity-40"
+            style={{background:'#2a1f0a', color:'#fbbf24', border:'1px solid #3a2f1a'}}
           >
             No vino
           </button>
           <button
             onClick={() => cambiar('cancelada')}
             disabled={guardando}
-            className="flex-1 text-xs bg-red-500 text-white py-2 rounded-xl font-semibold
-                       hover:bg-red-600 active:scale-95 transition-all disabled:opacity-40"
+            className="flex-1 text-xs py-2 rounded-xl font-semibold active:scale-95 transition-all disabled:opacity-40"
+            style={{background:'#2a0f0f', color:'#f87171', border:'1px solid #3a1f1f'}}
           >
             Cancelar
           </button>
@@ -218,26 +220,48 @@ export default function Panel({ onLogout }) {
   const confirmadas = citasHoy.filter(c => c.estado === 'confirmada').length
 
   // ── Render ──────────────────────────────────────────────────────
+  const panelInput = {
+    background:'#151515',
+    border:'1px solid #2a2a2a',
+    borderRadius:'12px',
+    padding:'10px 14px',
+    color:'#f0f0f0',
+    fontSize:'14px',
+    width:'100%',
+    outline:'none',
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{background:'#0a0a0a', color:'#f0f0f0'}}>
 
       {/* Header */}
-      <header className="bg-gray-900 text-white px-5 py-4 flex items-center justify-between">
+      <header className="px-5 py-4 flex items-center justify-between" style={{borderBottom:'1px solid #1e1e1e'}}>
         <div>
-          <h1 className="text-base font-bold">✂️ Panel del Barbero</h1>
-          <p className="text-xs text-gray-400 capitalize">{fechaHoy}</p>
+          <h1
+            className="font-bold text-white"
+            style={{fontFamily:"'Playfair Display', Georgia, serif", fontSize:'20px', letterSpacing:'0.08em'}}
+          >
+            Opera
+          </h1>
+          <p className="text-xs capitalize mt-0.5" style={{color:'#555'}}>{fechaHoy}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button
             onClick={cargarCitas}
-            className="text-xs text-gray-400 hover:text-white transition-colors"
-            title="Recargar citas"
+            className="transition-colors text-lg"
+            style={{color:'#555'}}
+            onMouseEnter={e => (e.currentTarget.style.color='#fff')}
+            onMouseLeave={e => (e.currentTarget.style.color='#555')}
+            title="Recargar"
           >
             ↻
           </button>
           <button
             onClick={onLogout}
-            className="text-xs text-gray-400 hover:text-white transition-colors"
+            className="text-xs uppercase transition-colors"
+            style={{color:'#555', letterSpacing:'0.12em'}}
+            onMouseEnter={e => (e.currentTarget.style.color='#c41230')}
+            onMouseLeave={e => (e.currentTarget.style.color='#555')}
           >
             Salir →
           </button>
@@ -245,7 +269,7 @@ export default function Panel({ onLogout }) {
       </header>
 
       {/* Tabs */}
-      <div className="flex bg-white border-b border-gray-200 px-2">
+      <div className="flex px-2" style={{borderBottom:'1px solid #1e1e1e'}}>
         {[
           ['hoy',      `Hoy${confirmadas > 0 ? ` (${confirmadas})` : ''}`],
           ['proximas', 'Próximas'],
@@ -254,11 +278,11 @@ export default function Panel({ onLogout }) {
           <button
             key={key}
             onClick={() => setTab(key)}
-            className={`py-3 px-4 text-sm font-semibold border-b-2 transition-colors ${
-              tab === key
-                ? 'border-gray-900 text-gray-900'
-                : 'border-transparent text-gray-400 hover:text-gray-600'
-            }`}
+            className="py-3 px-4 text-sm font-semibold transition-colors"
+            style={{
+              borderBottom: tab === key ? '2px solid #c41230' : '2px solid transparent',
+              color: tab === key ? '#fff' : '#555',
+            }}
           >
             {label}
           </button>
@@ -268,15 +292,14 @@ export default function Panel({ onLogout }) {
       {/* Contenido */}
       <main className="flex-1 px-5 py-5 max-w-md mx-auto w-full">
 
-        {/* Loading */}
         {cargando && (
-          <div className="text-center py-12 text-gray-400 text-sm">Cargando citas…</div>
+          <div className="text-center py-12 text-sm" style={{color:'#555'}}>Cargando citas…</div>
         )}
 
         {/* Tab: Hoy */}
         {!cargando && tab === 'hoy' && (
           <>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm mb-4" style={{color:'#555'}}>
               {citasHoy.length === 0
                 ? 'Sin citas para hoy'
                 : `${citasHoy.length} cita${citasHoy.length !== 1 ? 's' : ''} hoy`}
@@ -290,7 +313,7 @@ export default function Panel({ onLogout }) {
         {/* Tab: Próximas */}
         {!cargando && tab === 'proximas' && (
           <>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm mb-4" style={{color:'#555'}}>
               {citasProx.length === 0
                 ? 'Sin citas en los próximos 7 días'
                 : `${citasProx.length} cita${citasProx.length !== 1 ? 's' : ''} próximas`}
@@ -304,22 +327,27 @@ export default function Panel({ onLogout }) {
         {/* Tab: Bloquear */}
         {tab === 'bloquear' && (
           <form onSubmit={crearBloqueo} className="space-y-4">
-            <h2 className="font-bold text-gray-800 text-lg">Bloquear horario</h2>
-            <p className="text-sm text-gray-500">
+            <h2
+              className="font-bold text-white text-xl"
+              style={{fontFamily:"'Playfair Display', Georgia, serif"}}
+            >
+              Bloquear horario
+            </h2>
+            <p className="text-sm" style={{color:'#555'}}>
               Los clientes no podrán agendar en el período bloqueado.
             </p>
 
-            {/* Fecha */}
             <div>
-              <label className="text-xs text-gray-500 uppercase tracking-widest">Fecha</label>
+              <label className="text-xs uppercase mb-1.5 block" style={{color:'#555', letterSpacing:'0.15em'}}>Fecha</label>
               <input
                 type="date"
                 value={bFecha}
                 onChange={e => setBFecha(e.target.value)}
                 min={hoyCol()}
                 required
-                className="mt-1 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white
-                           focus:outline-none focus:ring-2 focus:ring-gray-900"
+                style={panelInput}
+                onFocus={e => (e.currentTarget.style.borderColor='#888')}
+                onBlur={e => (e.currentTarget.style.borderColor='#2a2a2a')}
               />
             </div>
 
@@ -327,61 +355,61 @@ export default function Panel({ onLogout }) {
             <label className="flex items-center gap-3 cursor-pointer select-none">
               <div
                 onClick={() => setBDiaCompleto(v => !v)}
-                className={`w-10 h-6 rounded-full transition-colors ${bDiaCompleto ? 'bg-gray-900' : 'bg-gray-200'}`}
+                className="w-10 h-6 rounded-full transition-colors"
+                style={{background: bDiaCompleto ? '#c41230' : '#2a2a2a'}}
               >
-                <div className={`w-5 h-5 bg-white rounded-full shadow mt-0.5 transition-transform ${
-                  bDiaCompleto ? 'translate-x-[18px]' : 'translate-x-0.5'
-                }`} />
+                <div
+                  className="w-5 h-5 bg-white rounded-full shadow mt-0.5 transition-transform"
+                  style={{transform: bDiaCompleto ? 'translateX(18px)' : 'translateX(2px)'}}
+                />
               </div>
-              <span className="text-sm text-gray-700">Día completo</span>
+              <span className="text-sm" style={{color:'#f0f0f0'}}>Día completo</span>
             </label>
 
-            {/* Horas (solo si no es día completo) */}
             {!bDiaCompleto && (
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label className="text-xs text-gray-500 uppercase tracking-widest">Desde</label>
+                  <label className="text-xs uppercase mb-1.5 block" style={{color:'#555', letterSpacing:'0.15em'}}>Desde</label>
                   <input
                     type="time"
                     value={bInicio}
                     onChange={e => setBInicio(e.target.value)}
                     required
-                    className="mt-1 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white
-                               focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    style={panelInput}
+                    onFocus={e => (e.currentTarget.style.borderColor='#888')}
+                    onBlur={e => (e.currentTarget.style.borderColor='#2a2a2a')}
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="text-xs text-gray-500 uppercase tracking-widest">Hasta</label>
+                  <label className="text-xs uppercase mb-1.5 block" style={{color:'#555', letterSpacing:'0.15em'}}>Hasta</label>
                   <input
                     type="time"
                     value={bFin}
                     onChange={e => setBFin(e.target.value)}
                     required
-                    className="mt-1 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white
-                               focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    style={panelInput}
+                    onFocus={e => (e.currentTarget.style.borderColor='#888')}
+                    onBlur={e => (e.currentTarget.style.borderColor='#2a2a2a')}
                   />
                 </div>
               </div>
             )}
 
-            {/* Motivo */}
             <div>
-              <label className="text-xs text-gray-500 uppercase tracking-widest">Motivo (opcional)</label>
+              <label className="text-xs uppercase mb-1.5 block" style={{color:'#555', letterSpacing:'0.15em'}}>Motivo (opcional)</label>
               <input
                 type="text"
                 value={bMotivo}
                 onChange={e => setBMotivo(e.target.value)}
                 placeholder="Ej: almuerzo, médico, vacaciones…"
-                className="mt-1 w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white
-                           focus:outline-none focus:ring-2 focus:ring-gray-900"
+                style={panelInput}
+                onFocus={e => (e.currentTarget.style.borderColor='#888')}
+                onBlur={e => (e.currentTarget.style.borderColor='#2a2a2a')}
               />
             </div>
 
-            {/* Mensaje de feedback */}
             {mensajeB && (
-              <p className={`text-sm text-center font-semibold ${
-                mensajeB.tipo === 'ok' ? 'text-green-600' : 'text-red-500'
-              }`}>
+              <p className="text-sm text-center font-semibold" style={{color: mensajeB.tipo === 'ok' ? '#4ade80' : '#c41230'}}>
                 {mensajeB.texto}
               </p>
             )}
@@ -389,8 +417,12 @@ export default function Panel({ onLogout }) {
             <button
               type="submit"
               disabled={guardandoB}
-              className="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl
-                         hover:bg-gray-800 active:scale-95 transition-all disabled:opacity-50"
+              className="w-full font-bold py-4 rounded-2xl transition-all active:scale-95"
+              style={{
+                background: guardandoB ? '#1a1a1a' : '#c41230',
+                color: guardandoB ? '#555' : '#fff',
+                fontSize:'15px',
+              }}
             >
               {guardandoB ? 'Guardando…' : 'Bloquear horario'}
             </button>

@@ -1,14 +1,9 @@
 // PasoFecha.jsx — Paso 2: el cliente elige la fecha
-// Muestra un calendario simple de 4 semanas hacia adelante.
-// Deshabilita domingos y festivos colombianos.
 
 import { useState } from 'react'
 import { esFestivoColombia } from '../lib/festivos.js'
 
-// Nombres de los días de la semana (abreviados)
 const DIAS_SEMANA = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá']
-
-// Nombres de los meses
 const MESES = [
   'enero','febrero','marzo','abril','mayo','junio',
   'julio','agosto','septiembre','octubre','noviembre','diciembre',
@@ -18,18 +13,14 @@ export default function PasoFecha({ servicio, onSeleccionar, onVolver }) {
   const hoy = new Date()
   hoy.setHours(0, 0, 0, 0)
 
-  // Navegar entre meses
   const [mesBase, setMesBase] = useState(
     new Date(hoy.getFullYear(), hoy.getMonth(), 1)
   )
 
-  // Construye el grid del mes actual
   function buildGrid(primero) {
     const dias = []
-    // Celda vacía para alinear el primer día con su día de semana
     const primerDiaSemana = primero.getDay()
     for (let i = 0; i < primerDiaSemana; i++) dias.push(null)
-
     const ultimoDia = new Date(primero.getFullYear(), primero.getMonth() + 1, 0).getDate()
     for (let d = 1; d <= ultimoDia; d++) {
       dias.push(new Date(primero.getFullYear(), primero.getMonth(), d))
@@ -40,7 +31,6 @@ export default function PasoFecha({ servicio, onSeleccionar, onVolver }) {
   function mesAnterior() {
     setMesBase(new Date(mesBase.getFullYear(), mesBase.getMonth() - 1, 1))
   }
-
   function mesSiguiente() {
     setMesBase(new Date(mesBase.getFullYear(), mesBase.getMonth() + 1, 1))
   }
@@ -48,12 +38,11 @@ export default function PasoFecha({ servicio, onSeleccionar, onVolver }) {
   function esDeshabilitada(fecha) {
     if (!fecha) return true
     if (fecha < hoy) return true
-    if (fecha.getDay() === 0) return true         // domingo
-    if (esFestivoColombia(fecha)) return true     // festivo
+    if (fecha.getDay() === 0) return true
+    if (esFestivoColombia(fecha)) return true
     return false
   }
 
-  // No permitir navegar antes del mes actual
   const esMesActual =
     mesBase.getFullYear() === hoy.getFullYear() &&
     mesBase.getMonth() === hoy.getMonth()
@@ -62,9 +51,14 @@ export default function PasoFecha({ servicio, onSeleccionar, onVolver }) {
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-gray-800 mb-1">¿Qué día te queda bien?</h2>
-      <p className="text-gray-500 text-sm mb-4">
-        Servicio: <strong>{servicio.nombre}</strong>
+      <h2
+        className="text-2xl font-bold text-white mb-1"
+        style={{fontFamily:"'Playfair Display', Georgia, serif"}}
+      >
+        ¿Qué día?
+      </h2>
+      <p className="text-sm mb-5" style={{color:'#666'}}>
+        Servicio: <span style={{color:'#f0f0f0'}}>{servicio.nombre}</span>
       </p>
 
       {/* Navegación de mes */}
@@ -72,33 +66,37 @@ export default function PasoFecha({ servicio, onSeleccionar, onVolver }) {
         <button
           onClick={mesAnterior}
           disabled={esMesActual}
-          className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Mes anterior"
+          className="w-8 h-8 flex items-center justify-center rounded-full transition-all disabled:opacity-20"
+          style={{color:'#888', fontSize:'18px'}}
+          onMouseEnter={e => !esMesActual && (e.currentTarget.style.color='#fff')}
+          onMouseLeave={e => (e.currentTarget.style.color='#888')}
         >
           ‹
         </button>
-        <span className="font-semibold text-gray-700 capitalize">
+        <span className="font-semibold capitalize text-white" style={{fontSize:'15px'}}>
           {MESES[mesBase.getMonth()]} {mesBase.getFullYear()}
         </span>
         <button
           onClick={mesSiguiente}
-          className="p-2 rounded-full hover:bg-gray-100"
-          aria-label="Mes siguiente"
+          className="w-8 h-8 flex items-center justify-center rounded-full transition-all"
+          style={{color:'#888', fontSize:'18px'}}
+          onMouseEnter={e => (e.currentTarget.style.color='#fff')}
+          onMouseLeave={e => (e.currentTarget.style.color='#888')}
         >
           ›
         </button>
       </div>
 
-      {/* Cabecera de días */}
+      {/* Cabecera días */}
       <div className="grid grid-cols-7 mb-2">
         {DIAS_SEMANA.map((d) => (
-          <div key={d} className="text-center text-xs font-medium text-gray-400 py-1">
+          <div key={d} className="text-center text-xs py-1" style={{color:'#555'}}>
             {d}
           </div>
         ))}
       </div>
 
-      {/* Grid de días */}
+      {/* Grid días */}
       <div className="grid grid-cols-7 gap-1">
         {grid.map((fecha, i) => {
           if (!fecha) return <div key={`v-${i}`} />
@@ -114,13 +112,15 @@ export default function PasoFecha({ servicio, onSeleccionar, onVolver }) {
               key={fecha.toISOString()}
               disabled={disabled}
               onClick={() => onSeleccionar(fecha)}
-              className={`
-                aspect-square rounded-xl text-sm font-medium transition-all
-                ${disabled
-                  ? 'text-gray-300 cursor-not-allowed'
-                  : 'hover:bg-gray-800 hover:text-white active:scale-90 cursor-pointer'}
-                ${esHoy && !disabled ? 'border-2 border-gray-800 text-gray-800' : ''}
-              `}
+              className="aspect-square rounded-lg text-sm font-medium transition-all active:scale-90"
+              style={{
+                color: disabled ? '#333' : '#f0f0f0',
+                cursor: disabled ? 'not-allowed' : 'pointer',
+                border: esHoy && !disabled ? '1px solid #c41230' : '1px solid transparent',
+                background: 'transparent',
+              }}
+              onMouseEnter={e => !disabled && (e.currentTarget.style.background='#c41230', e.currentTarget.style.color='#fff')}
+              onMouseLeave={e => !disabled && (e.currentTarget.style.background='transparent', e.currentTarget.style.color=esHoy?'#f0f0f0':'#f0f0f0')}
             >
               {fecha.getDate()}
             </button>
@@ -130,7 +130,10 @@ export default function PasoFecha({ servicio, onSeleccionar, onVolver }) {
 
       <button
         onClick={onVolver}
-        className="mt-6 text-sm text-gray-400 underline hover:text-gray-700"
+        className="mt-6 text-xs uppercase tracking-widest transition-all"
+        style={{color:'#555', letterSpacing:'0.15em'}}
+        onMouseEnter={e => (e.currentTarget.style.color='#c41230')}
+        onMouseLeave={e => (e.currentTarget.style.color='#555')}
       >
         ← Cambiar servicio
       </button>

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { obtenerSlots } from '../lib/disponibilidad.js'
 import Cargando from './Cargando.jsx'
 
-// Nombres de los meses para formatear la fecha
 const MESES = [
   'enero','febrero','marzo','abril','mayo','junio',
   'julio','agosto','septiembre','octubre','noviembre','diciembre',
@@ -15,11 +14,9 @@ export default function PasoHorario({ barberoId, servicio, fecha, onSeleccionar,
   const [cargando, setCargando] = useState(true)
   const [error, setError]       = useState(null)
 
-  // Cada vez que cambia la fecha o el servicio, recarga los slots
   useEffect(() => {
     setCargando(true)
     setError(null)
-
     obtenerSlots(barberoId, fecha, servicio.duracion_min)
       .then((resultado) => setSlots(resultado))
       .catch(() => setError('No pudimos cargar los horarios. Intenta de nuevo.'))
@@ -30,22 +27,29 @@ export default function PasoHorario({ barberoId, servicio, fecha, onSeleccionar,
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-gray-800 mb-1">¿A qué hora?</h2>
-      <p className="text-gray-500 text-sm mb-6">
-        {servicio.nombre} · {fechaTexto}
+      <h2
+        className="text-2xl font-bold text-white mb-1"
+        style={{fontFamily:"'Playfair Display', Georgia, serif"}}
+      >
+        ¿A qué hora?
+      </h2>
+      <p className="text-sm mb-6" style={{color:'#666'}}>
+        {servicio.nombre} · <span style={{color:'#f0f0f0'}}>{fechaTexto}</span>
       </p>
 
       {cargando && <Cargando texto="Consultando disponibilidad…" />}
 
       {error && (
-        <div className="bg-red-50 text-red-600 rounded-xl p-4 text-sm">{error}</div>
+        <div className="rounded-xl p-4 text-sm" style={{background:'#1a1a1a', color:'#c41230', border:'1px solid #c41230'}}>
+          {error}
+        </div>
       )}
 
       {!cargando && !error && slots.length === 0 && (
         <div className="text-center py-10">
-          <p className="text-4xl mb-3">😕</p>
-          <p className="text-gray-600 font-medium">No hay horas disponibles este día.</p>
-          <p className="text-gray-400 text-sm mt-1">Prueba con otra fecha.</p>
+          <p className="text-4xl mb-3">—</p>
+          <p className="font-medium" style={{color:'#888'}}>Sin horas disponibles este día.</p>
+          <p className="text-sm mt-1" style={{color:'#555'}}>Prueba con otra fecha.</p>
         </div>
       )}
 
@@ -55,9 +59,23 @@ export default function PasoHorario({ barberoId, servicio, fecha, onSeleccionar,
             <button
               key={slot.inicioISO}
               onClick={() => onSeleccionar(slot)}
-              className="py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold
-                         hover:bg-gray-800 hover:text-white hover:border-gray-800
-                         active:scale-95 transition-all text-sm"
+              className="py-3 text-sm font-semibold transition-all active:scale-95"
+              style={{
+                background:'#151515',
+                border:'1px solid #252525',
+                borderRadius:'12px',
+                color:'#f0f0f0',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background='#c41230'
+                e.currentTarget.style.borderColor='#c41230'
+                e.currentTarget.style.color='#fff'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background='#151515'
+                e.currentTarget.style.borderColor='#252525'
+                e.currentTarget.style.color='#f0f0f0'
+              }}
             >
               {slot.etiqueta}
             </button>
@@ -67,7 +85,10 @@ export default function PasoHorario({ barberoId, servicio, fecha, onSeleccionar,
 
       <button
         onClick={onVolver}
-        className="mt-6 text-sm text-gray-400 underline hover:text-gray-700"
+        className="mt-6 text-xs uppercase tracking-widest transition-all"
+        style={{color:'#555', letterSpacing:'0.15em'}}
+        onMouseEnter={e => (e.currentTarget.style.color='#c41230')}
+        onMouseLeave={e => (e.currentTarget.style.color='#555')}
       >
         ← Cambiar fecha
       </button>
