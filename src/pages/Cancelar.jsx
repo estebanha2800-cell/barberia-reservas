@@ -48,7 +48,7 @@ export default function Cancelar() {
     const { data, error: err } = await supabase
       .from('citas')
       .select('*, servicios(nombre, precio, duracion_min)')
-      .ilike('id', `${code}%`)
+      .filter('id::text', 'ilike', `${code.toLowerCase()}%`)
       .single()
 
     setBuscando(false)
