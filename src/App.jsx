@@ -1,33 +1,36 @@
 // App.jsx — componente raíz
-// Fase 2: routing manual + autenticación Supabase
 // Rutas:
-//   /         → página pública de reservas
-//   /admin    → panel del barbero (requiere sesión)
-//              si no hay sesión → muestra Login
+//   /       → página pública de reservas
+//   /admin  → panel del barbero (requiere sesión); si no hay sesión → Login
 
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase.js'
 import Reservas from './pages/Reservas.jsx'
-import Login    from './pages/Login.jsx'
-import Panel    from './pages/Panel.jsx'
+import Login   from './pages/Login.jsx'
+import Panel   from './pages/Panel.jsx'
+import Cargando from './components/Cargando.jsx'
+
+function ruta() {
+  return window.location.pathname.replace(/\/$/, '') || '/'
+}
 
 export default function App() {
-  const [ruta, setRuta]           = useState(() => window.location.pathname)
-  const [sesion, setSesion]       = useState(null)
-  const [authListo, setAuthListo] = useState(false)
+  const [pagina,   setPagina]   = useState(ruta())
+  const [sesion,   setSesion]   = useState(null)
+  const [chequeando, setChequeando] = useState(true)
 
-  // Escuchar cambios de URL (botón atrás/adelante)
+  // Detectar cambios de URL (botón atrás / adelante)
   useEffect(() => {
-    const handler = () => setRuta(window.location.pathname)
+    const handler = () => setPagina(ruta())
     window.addEventListener('popstate', handler)
     return () => window.removeEventListener('popstate', handler)
   }, [])
 
-  // Escuchar estado de autenticación
+  // Escuchar sesión de Supabase
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSesion(session)
-      setAuthListo(true)
+    supabase.auth.getSession().then(({ data }) => {
+      setSesion(data.session)
+      setChequeando(false)
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSesion(session)
@@ -35,27 +38,17 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  function navegar(path) {
+  function irA(path) {
     window.history.pushState({}, '', path)
-    setRuta(path)
+    setPagina(path)
   }
 
-  async function logout() {
-    await supabase.auth.signOut()
-    navegar('/')
+  if (chequeando) return <Cargando />
+
+  if (pagina === '/admin') {
+    if (!sesion) return <Login onLogin={() => setPagina('/admin')} />
+    return <Panel onCerrarSesion={() => { supabase.auth.signOut(); irA('/') }} />
   }
 
-  // Esperar que Supabase confirme si hay sesión activa
-  if (!authListo) return null
-
-  // Rutas /admin*
-  if (ruta.startsWith('/admin')) {
-    if (!sesion) {
-      return <Login onLogin={() => navegar('/admin')} />
-    }
-    return <Panel onLogout={logout} />
-  }
-
-  // Ruta pública
   return <Reservas />
 }
